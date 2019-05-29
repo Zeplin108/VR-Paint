@@ -5,8 +5,8 @@ using Valve.VR;
 
 public class ControllerOopsies : MonoBehaviour
 {
-    public GameObject penguPoint;//Origin of the paint
-    public bool isPenguVisible = false;
+    public GameObject colorPoint;//Origin of the paint
+    public bool isColorPoint = false;
     public bool showVerticies = false;
     private int parents = 0;
     public float timeBetweenDraws = 0.05f;//DEFAULT: 0.05f
@@ -26,7 +26,7 @@ public class ControllerOopsies : MonoBehaviour
 
     public void Awake()
     {
-        penguPoint.GetComponent<MeshRenderer>().enabled = isPenguVisible;
+        colorPoint.GetComponent<MeshRenderer>().enabled = isColorPoint;
         trigger = SteamVR_Actions._default.Squeeze;
     }
 
@@ -42,7 +42,7 @@ public class ControllerOopsies : MonoBehaviour
             {
                 dad = new GameObject();
                 dad.name = "Vertex Parent " + ++parents;
-                dad.transform.localPosition = penguPoint.transform.position;
+                dad.transform.localPosition = colorPoint.transform.position;
 
                 lastColor = GameObject.Find("Scripts").GetComponent<ColorPicker>().getColor();
                 colors.Add(lastColor);
@@ -66,7 +66,7 @@ public class ControllerOopsies : MonoBehaviour
 
                 dad = new GameObject();
                 dad.name = "Vertex Parent " + ++parents;
-                dad.transform.localPosition = penguPoint.transform.position;
+                dad.transform.localPosition = colorPoint.transform.position;
                 colors.Add(lastColor);
 
                 lastPengu.Clear();
@@ -85,7 +85,7 @@ public class ControllerOopsies : MonoBehaviour
             sphere.GetComponent<MeshRenderer>().enabled = showVerticies;
             sphere.name = "Paint Vertex";
             sphere.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
-            sphere.transform.position = penguPoint.transform.position;
+            sphere.transform.position = colorPoint.transform.position;
 
             if (lastVertex != null && colorChanged == true)
             {
@@ -98,18 +98,18 @@ public class ControllerOopsies : MonoBehaviour
             
             if (lastPengu.Count > 1)
             {
-                //holdTightAsnee will contain all of the verticies for a line
-                Vector3[] holdTightAsnee = new Vector3[lastPengu.Count];
+                //allVerticies will contain all of the verticies for a line
+                Vector3[] allVerticies = new Vector3[lastPengu.Count];
 
                 //Iterate through the verticies on the indexed line
                 for (int i = 0; i < lastPengu.Count; i++)
                 {
-                    holdTightAsnee[i] = lastPengu[i].transform.position;
+                    allVerticies[i] = lastPengu[i].transform.position;
                 }
 
                 line.material.color = lastColor;
                 line.positionCount = lastPengu.Count;
-                line.SetPositions(holdTightAsnee);
+                line.SetPositions(allVerticies);
             }
 
             timestamp = 0.0f;
